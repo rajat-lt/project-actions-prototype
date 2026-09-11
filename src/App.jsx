@@ -1,4 +1,4 @@
-// Project Actions — working prototype of the pattern in
+// Actions — working prototype of the pattern in
 // project-actions-listing.md. Day-grouped reverse-chronological feed of
 // long-running operations with live progress simulation.
 import React, { useEffect, useMemo, useRef, useState } from 'react'
@@ -166,7 +166,7 @@ export default function App() {
   const tabs = [
     { id: 'tc', label: 'Test Cases', counter: 482 },
     { id: 'tr', label: 'Test Runs', counter: 36 },
-    { id: 'pa', label: 'Project Actions', counter: runningCount > 0 ? runningCount : undefined, active: true },
+    { id: 'pa', label: 'Actions', counter: runningCount > 0 ? runningCount : undefined, active: true },
     { id: 'ms', label: 'Milestones', counter: 4 },
   ]
 
@@ -186,7 +186,7 @@ export default function App() {
         <UnderlineNav ariaLabel="Test Manager" tabs={tabs} />
 
         <main className="page">
-          <h1>Project Actions</h1>
+          <h1>Actions</h1>
           <p className="page-desc">
             Every operation running in this project and what recently finished — imports, exports,
             moves, copies, deletions and test run executions — whoever started them.
@@ -202,7 +202,7 @@ export default function App() {
           </div>
 
           {phase === 'error' && (
-            <Flash>We could not load project actions. Retry, or check your connection.</Flash>
+            <Flash>We could not load actions. Retry, or check your connection.</Flash>
           )}
 
           {phase === 'loading' && <div className="center"><Loader /></div>}

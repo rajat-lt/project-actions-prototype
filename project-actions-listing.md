@@ -10,7 +10,7 @@ Reference point from the brief: GitHub's Actions tab inside a repository — a f
 
 ## 1. What this page is
 
-A new **Project Actions** tab in the Test Manager project nav, placed **immediately after Test Runs**. It lists every long-running operation inside the project — running and recently finished — **regardless of who started it**, each with live progress (percentage bar, count of entities processed, estimated time remaining).
+A new **Actions** tab in the Test Manager project nav, placed **immediately after Test Runs**. It lists every long-running operation inside the project — running and recently finished — **regardless of who started it**, each with live progress (percentage bar, count of entities processed, estimated time remaining).
 
 What it is **not**: an audit log. The SmartUI Activity specs (`smartui-audit-log-prototype-spec.md`) answer "who changed this and why"; this page answers "what is running right now, and did my operation finish". One row here is one *operation*, never one affected entity — a move of 24 test cases is one row, not 24.
 
@@ -65,7 +65,7 @@ The platform shell, unchanged — and now owned by its own patterns rather than 
 import { LTUnderlineNav } from "@lambdatestincprivate/lt-components";
 
 {/* Observed order (test-instance-details.md): Test Cases · Test Runs · Milestones · …
-    New order: Test Cases · Test Runs · PROJECT ACTIONS · Milestones · …
+    New order: Test Cases · Test Runs · ACTIONS · Milestones · …
     The full observed tab set is not recorded in any pattern — leave the rest untouched.
 
     Counter on this item = number of RUNNING actions, not a total; it is the tab's
@@ -86,8 +86,11 @@ import {
 
 <LTBox styles={{ maxWidth: "1232px", margin: "0 auto", padding: "24px 0" }}>
 
-  <LTText as="h1" variant="HEADER_BOLD" text="Project Actions" />
-  <LTText variant="SMALL_REGULAR" style={{ marginTop: "8px", maxWidth: "72ch" }}
+  <LTText as="h1" variant="HEADER_BOLD" text="Actions" />
+  {/* Page description → body/medium (SUBHEADER_REGULAR, 14px). Corrected
+      11 Sep 2026 from SMALL_REGULAR: a sentence the user reads is 14px,
+      never 12. guidelines/README.md §3. */}
+  <LTText variant="SUBHEADER_REGULAR" style={{ marginTop: "8px", maxWidth: "72ch" }}
     text="Every operation running in this project and what recently finished — imports, exports, moves, copies, deletions and test run executions — whoever started them." />
 
   {/* Filter bar. The search field spans the row and the two filters from the
@@ -327,7 +330,7 @@ The awkward rows, deliberately: the `1.24k` total stress-testing the k-format in
 </LTBox>
 
 /* Error — inline, above the feed. One LTFlash per page, maximum. */
-<LTFlash variant="danger" text="We could not load project actions. Retry, or check your connection." crossIcon fullBorder />
+<LTFlash variant="danger" text="We could not load actions. Retry, or check your connection." crossIcon fullBorder />
 ```
 
 A failed *action* is a row state, not a page state — it renders as a normal `failed` row, never as an `LTFlash`. The banner is only for the feed itself failing to load.
@@ -350,7 +353,9 @@ There is no live product to diff against, so this replaces "Deltas from the live
 
 7. **Exactly the two filters from the brief — Event type and Date.** HyperExecute ships six including Status and Users; both would be defensible here and are deliberately left out until asked for (open question 6 covers Status as the lighter alternative to pinning).
 
-8. **Tab label "Project Actions".** Sentence case (§8) would say "Project actions", but the nav it joins renders `Test Cases` / `Test Runs` in title case; matching siblings wins inside one control. If the nav is ever normalised to sentence case, this tab follows.
+8. **Tab label "Actions"** (renamed from "Project Actions", 12 Sep 2026). The nav already sits inside one project — the breadcrumb above it reads `Test Manager / {project}` — so every tab in it is project-scoped and none of the others repeats the word: `Test Cases`, not `Project Test Cases`. "Project" was doing no work, and the tab is the widest label in the control. The heading matches the tab, per the crumb-matches-title principle in `guidelines/ltbreadcrumbs.md`. One word also retires the earlier case question: sentence case (§8) and the nav's title case agree on `Actions`.
+
+   **Still named for the longer form:** this pattern file, the prototype repo and the page's URL slug. Renaming those is a separate call — the file name describes the subject (actions within a project), not the label.
 
 ## 6. Layout notes
 

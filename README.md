@@ -1,6 +1,6 @@
 # Project Actions — prototype
 
-Working prototype of the proposed **Project Actions** tab for LambdaTest Test Manager: a
+Working prototype of the proposed **Actions** tab for LambdaTest Test Manager: a
 day-grouped, reverse-chronological feed of every long-running operation inside a project —
 imports, exports, moves, copies, deletions, automation and test run executions — with live
 progress (percentage bar, entity counts, estimated time remaining), regardless of who
