@@ -186,11 +186,20 @@ export function SearchInput({ value, onChange, placeholder, ariaLabel }) {
   )
 }
 
-export function ProgressBar({ pct, animated = false, label }) {
+/* Mirrors LTProgressBar.Transition. The smooth fill is `animated` TOGETHER with
+   transition SMOOTH — what `animated` does alone is undocumented, so both are
+   always set (guidelines/ltprogressbar.md, story-verified 11 Sep 2026). */
+export const TRANSITION = { SMOOTH: 'smooth' }
+
+/* A solid fill that glides to each new value. Never a diagonal striped or
+   barber-pole texture: a looping texture reads as indeterminate activity,
+   which is the opposite of what a determinate bar claims. */
+export function ProgressBar({ pct, animated = false, transition, label }) {
+  const smooth = animated && transition === TRANSITION.SMOOTH
   return (
     <div className="pbar" role="progressbar" aria-valuemin={0} aria-valuemax={100}
       aria-valuenow={pct} aria-label={label}>
-      <div className={`pbar-fill${animated ? ' animated' : ''}`} style={{ width: `${pct}%` }} />
+      <div className={`pbar-fill${smooth ? ' smooth' : ''}`} style={{ width: `${pct}%` }} />
     </div>
   )
 }

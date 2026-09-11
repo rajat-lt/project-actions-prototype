@@ -7,7 +7,7 @@ import {
   initialActions, lateArrival,
 } from './data.js'
 import {
-  StatusIcon, SearchInput, ProgressBar, BlankSlate, Loader,
+  StatusIcon, SearchInput, ProgressBar, TRANSITION, BlankSlate, Loader,
   Flash, UnderlineNav, SelectPanel, DateMenu, DateRangeModal,
 } from './lt.jsx'
 import { PlatformSidebar, TopBar } from './shell.jsx'
@@ -73,7 +73,9 @@ function Cluster({ a }) {
     return (
       <div className="cluster">
         <span className="frac">{fmtK(a.done)}/{fmtK(a.total)} {a.unit}</span>
-        <ProgressBar pct={pct} animated
+        {/* This bar is genuinely moving while the user watches, so it takes
+            the live recipe; a static bar is the default everywhere else. */}
+        <ProgressBar pct={pct} animated transition={TRANSITION.SMOOTH}
           label={`${Math.floor(a.done)} of ${a.total} ${a.unit} processed, ${pct} percent${eta ? `, about ${eta} remaining` : ''}`} />
         <span className="note">{eta ? `${pct}% · ~${eta} left` : 'Estimating time left…'}</span>
       </div>

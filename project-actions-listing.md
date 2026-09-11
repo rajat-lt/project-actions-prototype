@@ -40,15 +40,15 @@ The brief lists 15 action situations. They collapse into **7 event types** — t
 |---|---|---|
 | `LTUnderlineNav` | Project nav, top of page | New nav item after Test Runs; counter = running-action count. `navs` shape TBD, story `ltunderlinenav--with-counters` |
 | `LTText` | H1, description, group headings, progress text | `HEADER_BOLD` for the h1 |
-| `LTInputBox` | Search | `variant="default"`, `inputOnly`, `type="search"`, fixed width per the feed siblings |
+| `LTInputBox` | Search | `variant="default"` — the background variant, since `white` renders without one. `inputOnly`, `type="search"`, spans the row |
 | `LTSelectPanel` | **Event type filter** — multi-select with its own trigger | `buttonLabel`, `showCountOnCta`, `onApply`. `options` shape TBD → `ltselectpanel--select-panel`. See open question 3 |
 | `LTActionMenu` | **Date filter** — single-select presets | `anchorType="button"`, `buttonVariant="outline"`, `selectionVariant="single"`. No inputs in menus, so the custom range opens an `LTModal` (`guidelines/ltactionmenu.md`) |
 | `LTModal` + `LTTimeDateSelector` | Custom date range | 480px. `LTTimeDateSelector` is the library's real date picker — see open question 4 |
-| `LTTimeline` | Day-grouped vertical rail | `className`, `extraStyles`, `politenessLevel`; takes children. Story `lttimeline--timeline` |
+| `LTTimeline` | Day-grouped vertical rail | Compound API, story-verified 11 Sep 2026: `LTTimeline.Item` (`badgeIcon`) + `LTTimeline.Body`. Plus `politenessLevel` on the root |
 | `LTAutomationCard` | Every action row | `heading`, `subInfo[]`, `secondaryElement` — third page to borrow it, see open question 1 |
 | `LTTestStatusLabel` | Status icon in the row heading | `status`, `showStatusText={false}`. Fourth entity type to use it — see open question 2 |
 | `LTLabelGroup` + `LTTag` | Event type · `Cross-project` · source tags | Read-only, `labelStyle="outline"`, `variant="blueAccent"` |
-| `LTProgressBar` | Live progress on running rows | `segments` TBD → `ltprogressbar--progress-bar`. **`animated` prop exists — use it here**, the one row type in LT that is genuinely moving |
+| `LTProgressBar` | Live progress on running rows | Story-verified 11 Sep 2026: `animated` + `transition={LTProgressBar.Transition.SMOOTH}`; `segments=[{ id, progress, style:{ backgroundColor } }]`. `guidelines/ltprogressbar.md` |
 | `LTCounterLabel` | Running count in the nav item | `count`, `scheme` |
 | `LTBlankSlate` / `LTLoader` / `LTFlash` | Empty, loading, error | Required. Empty state deliberately has no primary action — see decision 5 |
 | `LTBox`, `LTDivider` | Layout, row separators | — |
@@ -90,9 +90,11 @@ import {
   <LTText variant="SMALL_REGULAR" style={{ marginTop: "8px", maxWidth: "72ch" }}
     text="Every operation running in this project and what recently finished — imports, exports, moves, copies, deletions and test run executions — whoever started them." />
 
-  {/* Filter bar. Search fixed at 270px per the feed siblings; the two filters
-      from the brief follow. No select-all (nothing is selectable), no primary
-      action (actions start elsewhere — you cannot create one here). */}
+  {/* Filter bar. The search field spans the row and the two filters from the
+      brief sit inline to its right — the Test Manager filter-bar shape
+      (test-entity-listing.md §3.3), not HyperExecute's fixed 270px field.
+      No select-all (nothing is selectable), no primary action (actions start
+      elsewhere — you cannot create one here). */}
   <LTBox styles={{ display: "flex", alignItems: "center", gap: "12px", margin: "16px 0 24px" }}>
 
     {/* Search needs a background: variant="default", never "white".
@@ -101,7 +103,7 @@ import {
         result-count change to screen readers, don't just re-render. */}
     <LTInputBox inputOnly type="search" size="medium" variant="default"
       placeholder="Search actions" ariaLabel="Search actions" allowClearSearch
-      value="" onChange={() => {}} extraStyle={{ width: "270px", flex: "0 0 270px" }} />
+      value="" onChange={() => {}} extraStyle={{ flex: 1 }} />
 
     {/* Event type: 7 options, multi-select → LTSelectPanel, the only multi-select
         surface (guidelines/ltactionmenu.md forbids multi-select menus).
@@ -232,10 +234,13 @@ function ActionProgress({ action }) {
   if (status === "running") return (
     <LTBox styles={{ display: "flex", alignItems: "center", gap: "12px", flex: "0 0 360px" }}>
       <LTText variant="SMALL_REGULAR" text={`${done}/${total} ${unit}`} />
-      {/* One segment — the completed fraction. animated: this bar is live.
-          The words for screen readers, per guidelines/ltprogressbar.md.
-          segments shape TBD → ltprogressbar--progress-bar */}
-      <LTProgressBar segments={[]} size="small" showInlineBar animated
+      {/* One segment — the completed fraction. This bar is genuinely live.
+          Story-verified recipe (11 Sep 2026): animated + transition SMOOTH,
+          segments=[{ id, progress, style:{ backgroundColor } }].
+          guidelines/ltprogressbar.md */}
+      <LTProgressBar animated transition={LTProgressBar.Transition.SMOOTH}
+        segments={[{ id: "done", progress: pct, style: { backgroundColor: "success.emphasis" } }]}
+        size="small" showInlineBar
         ariaLabel={`${done} of ${total} ${unit} processed, ${pct} percent, about ${timeLeft} remaining`} />
       <LTText variant="SMALL_REGULAR" text={`${pct}% · ~${timeLeft} left`} />
     </LTBox>
@@ -351,7 +356,7 @@ There is no live product to diff against, so this replaces "Deltas from the live
 
 - **Centred single column, 112px each side → 1232px** at the 1512 default; 1160px at 1440, 1000px at 1280 (`guidelines/README.md` §2).
 - Group spacing `32px`, rows in one bordered container (`8px` radius) with `LTDivider` between — identical to the sibling feeds and the settled listing treatment.
-- Search fixed at `270px`, filters follow at `12px` gaps; all spacing multiples of 4.
+- Search spans the row (`flex: 1`); the filter triggers sit inline to its right at `12px` gaps. All spacing multiples of 4.
 - Trailing cluster `360px` `[proposed — see §3.4]`.
 - Timestamps: day in the group heading, zero-padded `HH:MM AM/PM` time in the row, durations in the leading-unit-dropping format — all `mock-data.md`.
 
