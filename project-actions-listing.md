@@ -59,7 +59,7 @@ The brief lists 15 action situations. They collapse into **7 event types** — t
 
 ### 3.1 Shell and nav
 
-The Test Manager shell from `test-entity-listing.md` §3.1, unchanged: 56px rail, top bar with the Credits cluster, breadcrumb `Test Manager / {project}`. Then the project nav with the new item:
+The platform shell, unchanged — and now owned by its own patterns rather than copied from a page: the 56px rail that expands on hover into a 320px overlay (`platform-sidebar.md`) and the top bar carrying the breadcrumb `Test Manager / {project}` plus the Credits quota module, product buttons, notifications bell, avatar and `Upgrade Now` (`topbar.md`, 11 Sep 2026). Both surfaces sit on the `canvas.subtle` grey; page content stays white. Then the project nav with the new item:
 
 ```jsx
 import { LTUnderlineNav } from "@lambdatestincprivate/lt-components";

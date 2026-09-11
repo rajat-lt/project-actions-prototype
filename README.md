@@ -22,6 +22,17 @@ npm run dev        # http://localhost:5178
 npm run build      # static build in dist/
 ```
 
+## The shell
+
+The 56px rail and the top bar follow the two shell patterns, `platform-sidebar.md`
+and `topbar.md`. Both sit on the `canvas.subtle` grey (`#f6f8fa`); page content stays
+white. The rail expands on hover into a 320px panel that **overlays** page content —
+nothing reflows — carrying the 15 platform destinations, which are different content
+from the collapsed rail's product icons. The top bar renders above that panel, never
+overlapped by it, with the breadcrumb on the left and the modular right cluster:
+Credits, a separator, product buttons, the notifications bell with its unread badge,
+the avatar, and `Upgrade Now` always rightmost.
+
 ## What is simulated
 
 Progress advances every second: bars fill, ETAs count down, the queued TestRail import

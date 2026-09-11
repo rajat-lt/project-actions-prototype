@@ -7,10 +7,10 @@ import {
   initialActions, lateArrival,
 } from './data.js'
 import {
-  StatusIcon, Btn, Avatar, SearchInput, ProgressBar, BlankSlate, Loader,
+  StatusIcon, SearchInput, ProgressBar, BlankSlate, Loader,
   Flash, UnderlineNav, SelectPanel, DateMenu, DateRangeModal,
-  ChevronDown, BellIcon, ClockIcon,
 } from './lt.jsx'
+import { PlatformSidebar, TopBar } from './shell.jsx'
 
 const TODAY = '2026-09-11'
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
@@ -108,29 +108,6 @@ function ActionRow({ a }) {
   )
 }
 
-/* Platform rail — shell only; four product icons per platform-sidebar.md,
-   active destination marked with grey fill (sanctioned exception, no bar). */
-function Rail() {
-  const glyph = d => (
-    <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
-      <path d={d} fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  )
-  return (
-    <aside className="rail" aria-label="Platform">
-      <div className="rail-brand" title="TestMu AI — Formerly LambdaTest">T</div>
-      <span className="rail-icon">{glyph('M2.5 8 8 2.5 13.5 8 8 13.5Z')}</span>
-      <span className="rail-icon active" title="Test Manager">
-        {glyph('M4 2.5h8v11H4Z M6 5.5h4 M6 8h4 M6 10.5h2.5')}
-      </span>
-      <span className="rail-icon">{glyph('M8 2.5v4 M5 13.5h6L9.5 6.5h-3Z')}</span>
-      <span className="rail-icon">{glyph('M3 3h4v4H3Z M9 3h4v4H9Z M3 9h4v4H3Z M9 9h4v4H9Z')}</span>
-      <span className="rail-spacer" />
-      <span className="rail-icon">{glyph('M8 14.5a6.5 6.5 0 1 0 0-13 6.5 6.5 0 0 0 0 13Z M6 6a2 2 0 0 1 3.9.6c0 1.3-1.9 1.6-1.9 2.6 M8 11.4v.2')}</span>
-    </aside>
-  )
-}
-
 export default function App() {
   const mode = useMemo(() => new URLSearchParams(window.location.search).get('state'), [])
   const [phase, setPhase] = useState(mode === 'error' ? 'error' : 'loading')
@@ -193,20 +170,16 @@ export default function App() {
 
   return (
     <div className="app">
-      <Rail />
+      <PlatformSidebar activeProduct="test-manager" />
       <div className="main">
-        <header className="topbar">
-          <div className="crumb">Test Manager <span className="sep">/</span> Web app</div>
-          <div className="topbar-right">
-            <Btn variant="invisible" caret>
-              <span className="credits"><span className="k">Credits</span> <span className="v">4.3K</span></span>
-            </Btn>
-            <Btn size="small" leading={<ClockIcon />}>Recent Tests</Btn>
-            <Btn variant="invisible" className="iconbtn" aria-label="Announcements" leading={<BellIcon />}>{''}</Btn>
-            <Avatar initials="MB" name="Mahendra Damodardas Baahubali" />
-            <Btn variant="orange" size="small">Upgrade Now</Btn>
-          </div>
-        </header>
+        {/* Shell surfaces, both from design-context/patterns. Pages supply the
+            crumbs and the product's modules; they never redesign the bar. */}
+        <TopBar
+          crumbs={[{ label: 'Test Manager' }, { label: 'Web app' }]}
+          user={{ initials: 'RS', name: 'Ritika Sharma' }}
+          credits="20k"
+          unreadCount={3}
+        />
 
         <UnderlineNav ariaLabel="Test Manager" tabs={tabs} />
 
