@@ -34,6 +34,7 @@
 
   /* semantic (TOKENS.md light) */
   --primary-btn: #1f883d;        /* btn.primary.bg */
+  --success-emphasis: #1f883d;   /* progress fill — the story's segment colour */
   --primary-btn-hover: #1c8139;
   --success: #1a7f37;
   --danger: #d1242f;
@@ -221,14 +222,18 @@ a.crumb:hover { color: var(--accent); text-decoration: underline; }
 /* ---------- filter bar ---------- */
 .filterbar { display: flex; align-items: center; gap: 12px; margin: 16px 0 24px; }
 
-.search { position: relative; width: 270px; flex: 0 0 270px; }
+/* Spans the row; the filter triggers sit inline to its right. */
+.search { position: relative; flex: 1; min-width: 0; }
 .search svg { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--fg-subtle); }
 .search input {
   width: 100%; height: 32px; padding: 0 28px 0 32px;
   border: 1px solid var(--border); border-radius: 6px;
-  font: inherit; font-size: 14px; background: var(--bg); color: var(--fg);
+  /* The background variant: a search field must render WITH a background.
+     variant="white" is the one that has none. guidelines/ltinputbox.md */
+  font: inherit; font-size: 14px; background: var(--bg-subtle); color: var(--fg);
 }
 .search input:focus { outline: 2px solid var(--accent); outline-offset: -1px; border-color: transparent; }
+.search input::placeholder { color: var(--fg-subtle); }
 .search .clear {
   position: absolute; right: 4px; top: 50%; transform: translateY(-50%);
   border: 0; background: none; color: var(--fg-subtle); cursor: pointer;
@@ -308,20 +313,22 @@ a.crumb:hover { color: var(--accent); text-decoration: underline; }
 .cluster .note { color: var(--fg-muted); white-space: nowrap; text-align: right; }
 
 .pbar { flex: 1; min-width: 60px; height: 6px; border-radius: 999px; background: var(--timeline-badge); overflow: hidden; }
-.pbar-fill { height: 100%; background: var(--primary-btn); border-radius: 999px; transition: width 0.9s linear; }
-.pbar-fill.animated {
-  background-image: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.3) 0 5px, transparent 5px 10px);
-  background-size: 28px 28px;
-  animation: stripes 1s linear infinite;
-}
-@keyframes stripes { to { background-position: 28px 0; } }
+/* Solid fill. Motion is the value gliding to its new position — the
+   ltprogressbar--smooth-progress story. NEVER a diagonal striped or
+   barber-pole texture: a looping texture reads as indeterminate activity,
+   the opposite of what a determinate bar claims.
+   guidelines/ltprogressbar.md, 11 Sep 2026. */
+.pbar-fill { height: 100%; background: var(--success-emphasis); border-radius: 999px; }
+/* The glide matches the tick cadence, so the fill moves continuously rather
+   than stepping. Only live bars get it; a static bar is the default. */
+.pbar-fill.smooth { transition: width 1s linear; }
 
 .spin { animation: rot 1.1s linear infinite; transform-origin: center; }
 @keyframes rot { to { transform: rotate(360deg); } }
 
 @media (prefers-reduced-motion: reduce) {
-  .spin, .pbar-fill.animated, .loader { animation: none !important; }
-  .pbar-fill { transition: none; }
+  .spin, .loader { animation: none !important; }
+  .pbar-fill.smooth { transition: none; }
 }
 
 /* ---------- overlays ---------- */
